@@ -14,6 +14,9 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
 
 
         [SerializeField] ScriptableObject m_HandShapeOrPose;
+        [SerializeField] UnityEvent m_GesturePerformed;
+        [SerializeField] UnityEvent m_GestureEnded;
+
         XRHandShape m_HandShape;
         XRHandPose m_HandPose;
         bool m_WasDetected;
@@ -46,6 +49,7 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
 
             if (m_WasDetected && !detected)
             {
+                m_GestureEnded?.Invoke();
                 m_PerformedTriggered = false;
             }
 
@@ -53,6 +57,7 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
 
             if (!m_PerformedTriggered && detected)
             {
+                m_GesturePerformed?.Invoke();
                 m_PerformedTriggered = true;
                 ExecuteOnce();
             }
