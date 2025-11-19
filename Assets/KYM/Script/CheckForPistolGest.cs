@@ -16,6 +16,8 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
         [SerializeField] ScriptableObject m_HandShapeOrPose;
         [SerializeField] UnityEvent m_GesturePerformed;
         [SerializeField] UnityEvent m_GestureEnded;
+        [SerializeField] float m_MinimumHoldTime = 0.2f;
+        [SerializeField] float m_GestureDetectionInterval = 0.1f;
 
         XRHandShape m_HandShape;
         XRHandPose m_HandPose;
@@ -39,7 +41,7 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
 
         void OnJointsUpdated(XRHandJointsUpdatedEventArgs eventArgs)
         {
-            if (!isActiveAndEnabled)
+            if (!isActiveAndEnabled || Time.timeSinceLevelLoad < m_TimeOfLastConditionCheck + m_GestureDetectionInterval)
                 return;
 
             var detected =
@@ -47,7 +49,11 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
                 m_HandShape != null && m_HandShape.CheckConditions(eventArgs) ||
                 m_HandPose != null && m_HandPose.CheckConditions(eventArgs);
 
-            if (m_WasDetected && !detected)
+            if (!m_WasDetected && detected)
+            {
+                m_HoldStartTime = Time.timeSinceLevelLoad;
+            } 
+            else if (m_WasDetected && !detected)
             {
                 m_GestureEnded?.Invoke();
                 m_PerformedTriggered = false;
@@ -57,10 +63,15 @@ namespace UnityEngine.XR.Hands.Samples.GestureSample
 
             if (!m_PerformedTriggered && detected)
             {
-                m_GesturePerformed?.Invoke();
-                m_PerformedTriggered = true;
-                ExecuteOnce();
+                var holdTimer = Time.timeSinceLevelLoad - m_HoldStartTime;
+                if (holdTimer > m_MinimumHoldTime)
+                {
+                    m_GesturePerformed?.Invoke();
+                    m_PerformedTriggered = true;
+                    ExecuteOnce();
+                }
             }
+            m_TimeOfLastConditionCheck = Time.timeSinceLevelLoad;
         }
 
         void ExecuteOnce()
