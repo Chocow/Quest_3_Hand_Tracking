@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c9049deb583de468a8d2e8a5833d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ghost
-  m_HealthBar: {fileID: 0}
+  m_HealthBar: {fileID: 7893242311767488845}
   m_MaxLife: 20
 --- !u!4 &796652407307068396 stripped
 Transform:
