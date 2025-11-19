@@ -3,7 +3,7 @@ using UnityEngine;
 public class Ghost : MonoBehaviour
 {
     [SerializeField] GameObject m_HealthBar;
-    [SerializeField] int m_MaxLife = 20;
+    [SerializeField] int m_MaxLife = 5;
     private int m_CurrentLife;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,9 +23,13 @@ public class Ghost : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Pouic");
-
         if (other.CompareTag("Laser"))
+        {
+            m_CurrentLife--;
+            m_HealthBar.GetComponent<HealthBar>().SetHealth(m_CurrentLife);
+        }
+
+        if (other.CompareTag("Melee"))
         {
             m_CurrentLife--;
             m_HealthBar.GetComponent<HealthBar>().SetHealth(m_CurrentLife);
