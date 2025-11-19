@@ -8,6 +8,7 @@ public class SpawnerManager : MonoBehaviour
 
     // Create a Spawn Area
     [SerializeField] private Transform spawnAreaCenter;
+    [SerializeField] public Transform target;
     [SerializeField] private Vector3 spawnAreaSize;
 
     [Header("Prefab to Spawn")]

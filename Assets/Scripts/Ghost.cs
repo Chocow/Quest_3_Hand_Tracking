@@ -27,6 +27,8 @@ public class Ghost : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Collsion");
+
         if (other.CompareTag("Laser"))
         {
             m_CurrentLife--;
@@ -35,6 +37,7 @@ public class Ghost : MonoBehaviour
 
         if (other.CompareTag("Melee"))
         {
+            Debug.Log("melee");
             m_CurrentLife--;
             m_HealthBar.GetComponent<HealthBar>().SetHealth(m_CurrentLife);
         }
@@ -42,13 +45,10 @@ public class Ghost : MonoBehaviour
 
     private void MoveTowardsPlayer()
     {
-        if (cameraMain == null)
-        {
-            cameraMain = Camera.main.transform;
-        }
-        transform.LookAt(cameraMain);
+       
+        transform.LookAt(SpawnerManager.Instance.target);
 
-        Vector3 direction = (cameraMain.position - transform.position).normalized;
+        Vector3 direction = (SpawnerManager.Instance.target.position - transform.position).normalized;
 
         transform.position += direction * moveSpeed * Time.deltaTime;
     }
